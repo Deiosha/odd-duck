@@ -77,6 +77,15 @@ function renderImages() {
 function handleShowResults(event) {
   // displey 25 rounds
   if (voteCount === 0) {
+
+    // Where storage starts. STEP 1: Strinify data
+    let stringifiedProducts = JSON.stringify(productArray);
+
+    // STEP 2: adding to Local storage
+    localStorage.setItem('myProducts', stringifiedProducts);
+    // Then get item key before executable
+
+
     // show results of voting
 
     let productNames = [];
@@ -153,28 +162,39 @@ function Product(name, fileExtension = 'jpg') {
 }
 
 
-
 // #pragma Executable
 
-new Product('bag');
-new Product('banana');
-new Product('bathroom');
-new Product('boots');
-new Product('breakfast');
-new Product('bubblegum');
-new Product('chair');
-new Product('cthulhu');
-new Product('dogDuck');
-new Product('dragon');
-new Product('pen');
-new Product('petsweep');
-new Product('scissors');
-new Product('shark');
-new Product('sweep', 'png');
-new Product('tauntaun');
-new Product('unicorn');
-new Product('waterCan');
-new Product('wineGlass');
+// STEP 3: Get items by pulling from local storage
+
+let retrievedProducts = localStorage.getItem('myProducts');
+
+// Parse my code
+let parsedProducts = JSON.parse(retrievedProducts);
+
+//Check to see if there is somthing in local storage
+if (parsedProducts) {
+  productArray = parsedProducts;
+} else {
+  new Product('bag');
+  new Product('banana');
+  new Product('bathroom');
+  new Product('boots');
+  new Product('breakfast');
+  new Product('bubblegum');
+  new Product('chair');
+  new Product('cthulhu');
+  new Product('dogDuck');
+  new Product('dragon');
+  new Product('pen');
+  new Product('petsweep');
+  new Product('scissors');
+  new Product('shark');
+  new Product('sweep', 'png');
+  new Product('tauntaun');
+  new Product('unicorn');
+  new Product('waterCan');
+  new Product('wineGlass');
+}
 
 
 
