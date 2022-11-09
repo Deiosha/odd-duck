@@ -7,33 +7,17 @@ h1 {
   color: #f5f5f5;
 }
 
-#img-one {
-  background-color: black;
-  /* display: flex;
-  justify-content: center; */
-  /* width: 400px; */
-  padding: 5px;
-  margin: auto;
-  text-align: center;
+
+
+#img-container{
+  display: flex;
+  justify-content:center;
+  width: 90%;
 }
 
-#img-two {
-  background-color: goldenrod;
-  /* display: flex;
-  justify-content:center; */
-  /* width: 400px; */
-  padding: 5px;
-  margin: left;
+#img-container img{
+  width: 200px;
 }
-
-#img-three{
-  background-color:blanchedalmond;
-  /* display: flex;
-  justify-content: center; */
-  padding: 5px;
-  margin: right;
-}
-
 #results-btn{
   background-color: green ;
 }
