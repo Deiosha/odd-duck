@@ -4,6 +4,7 @@
 
 let productArray = [];
 let voteCount = 25;
+let previousArray = [];
 
 // #pragma DOM References
 
@@ -17,35 +18,55 @@ let resultsBtn = document.getElementById('results-btn');
 
 let resultsContainer = document.getElementById('results-container');
 
+// For my canvas chart: Step 1: Getting element by ID
+let chartContext = document.getElementById('my-chart').getContext('2d');
+
+
 // #pragma Helper Function
 
 function randomIndex() {
   return Math.floor(Math.random() * productArray.length);
 }
 
+function uniqueImagesChecker() {
+  let imageArray = [];
+  while (imageArray.length < 3) {
+    let randomImage = randomIndex();
+    if (imageArray.includes(randomImage) || previousArray.includes(randomImage)) {
+      // do nothing
+    }
+    else {
+      imageArray.push(randomImage);
+    }
+  }
+  previousArray = imageArray;
+  return (imageArray);
+}
+
 function renderImages() {
-  let imgOneIndex = randomIndex();
-  let imgTwoIndex = randomIndex();
-  let imgThreeIndex = randomIndex();
+  let threeNewImages = uniqueImagesChecker();
+  let imgOneIndex = productArray[threeNewImages[0]];
+  let imgTwoIndex = productArray[threeNewImages[1]];
+  let imgThreeIndex = productArray[threeNewImages[2]];
 
-  while (imgOneIndex === imgTwoIndex) {
-    imgTwoIndex = randomIndex();
-  }
-  while (imgOneIndex === imgThreeIndex && imgTwoIndex === imgThreeIndex) {
-    imgThreeIndex = randomIndex();
-  }
+  // while (imgOneIndex === imgTwoIndex) {
+  //   imgTwoIndex = randomIndex();
+  // }
+  // while (imgOneIndex === imgThreeIndex || imgTwoIndex === imgThreeIndex) {
+  //   imgThreeIndex = randomIndex();
+  // }
 
-  imgOne.src = productArray[imgOneIndex].imagePath;
-  imgTwo.src = productArray[imgTwoIndex].imagePath;
-  imgThree.src = productArray[imgThreeIndex].imagePath;
+  imgOne.src = imgOneIndex.imagePath;
+  imgTwo.src = imgTwoIndex.imagePath;
+  imgThree.src = imgThreeIndex.imagePath;
 
-  imgOne.alt = productArray[imgOneIndex].name;
-  imgTwo.alt = productArray[imgTwoIndex].name;
-  imgThree.alt = productArray[imgThreeIndex].name;
+  imgOne.alt = imgOneIndex.name;
+  imgTwo.alt = imgTwoIndex.name;
+  imgThree.alt = imgThreeIndex.name;
 
-  productArray[imgOneIndex].views++;
-  productArray[imgTwoIndex].views++;
-  productArray[imgThreeIndex].views++;
+  imgOneIndex.views++;
+  imgTwoIndex.views++;
+  imgThreeIndex.views++;
 
 
 
@@ -57,6 +78,37 @@ function handleShowResults(event) {
   // displey 25 rounds
   if (voteCount === 0) {
     // show results of voting
+
+    let productNames = [];
+    let productClicks = [];
+    let productViews = [];
+    for (let i = 0; i < productArray.length; i++) {
+      productNames.push(productArray[i].name);
+      productViews.push(productArray[i].views);
+      productClicks.push(productArray[i].clicks);
+    }
+    console.log(productNames, productClicks, productViews);
+
+
+    let chartConfig = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          label: '# of Views',
+          data: productViews,
+          backgroundColor: 'pink',
+        }, {
+          label: '# of Clicks',
+          data: productClicks,
+          backgroundColor: 'white',
+        }],
+        labels: productNames,
+      },
+      options: {},
+    };
+
+    let myChart = new Chart(chartContext, chartConfig);
+
     for (let i = 0; i < productArray.length; i++) {
       let liElem = document.createElement('li');
       liElem.textContent = `${productArray[i].name} was viewed: ${productArray[i].views} time(s) and clicked: ${productArray[i].clicks}`;
@@ -76,17 +128,18 @@ function handleImageClick(event) {
   for (let i = 0; i < productArray.length; i++) {
     if (productArray[i].name === productClicked) {
       productArray[i].clicks++;
+      // decerement votes to only have 25 total
+      voteCount--;
+
+      // render new images:
+      renderImages();
     }
   }
-  // decerement votes to only have 25 total
-  voteCount--;
-
-  // render new images:
-  renderImages();
 
   //  stop counting after 25
   if (voteCount === 0) {
     imageContainer.removeEventListener('click', handleImageClick);
+
   }
 }
 
@@ -98,6 +151,7 @@ function Product(name, fileExtension = 'jpg') {
   this.views = 0;
   productArray.push(this);
 }
+
 
 
 // #pragma Executable
@@ -125,6 +179,7 @@ new Product('wineGlass');
 
 
 renderImages();
+
 
 imageContainer.addEventListener('click', handleImageClick);
 
