@@ -67,10 +67,8 @@ function renderImages() {
   imgOneIndex.views++;
   imgTwoIndex.views++;
   imgThreeIndex.views++;
-
-
-
 }
+
 
 // #pragma Event Handler
 
@@ -117,6 +115,7 @@ function handleShowResults(event) {
     };
 
     let myChart = new Chart(chartContext, chartConfig);
+    // this is so hard but I can do this no matter what becuase future me will thank me.
 
     for (let i = 0; i < productArray.length; i++) {
       let liElem = document.createElement('li');
